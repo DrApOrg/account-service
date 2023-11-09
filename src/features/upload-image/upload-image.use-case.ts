@@ -14,7 +14,7 @@ export class UploadImageUseCase {
   });
   constructor() {}
 
-  async execute(file: Express.Multer.File): Promise<string> {
+  async execute(file: Express.Multer.File): Promise<{ url: string }> {
     const key = randomUUID();
     try {
       const commnad = new PutObjectCommand({
@@ -25,7 +25,9 @@ export class UploadImageUseCase {
       let s3Response = await this.s3.send(commnad);
       console.log(s3Response);
 
-      return `https://${this.AWS_S3_BUCKET}.s3.amazonaws.com/${key}`;
+      return {
+        url: `https://${this.AWS_S3_BUCKET}.s3.amazonaws.com/${key}`,
+      };
     } catch (e) {
       throw new HttpException('No se pudo subi la image', 404);
     }

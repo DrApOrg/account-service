@@ -12,7 +12,9 @@ export class UploadImageHttpController {
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  async execute(@UploadedFile() file: Express.Multer.File): Promise<string> {
+  async execute(
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<{ url: string }> {
     return await this.uploadImageUseCase.execute(file);
   }
 }
