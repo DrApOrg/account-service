@@ -23,7 +23,6 @@ export class UploadImageUseCase {
         Body: file.buffer,
       });
       let s3Response = await this.s3.send(commnad);
-      console.log(s3Response);
 
       return {
         url: `https://${this.AWS_S3_BUCKET}.s3.amazonaws.com/${key}`,

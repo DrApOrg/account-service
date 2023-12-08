@@ -11,18 +11,23 @@ export class RegisterACcountUseCase {
     private readonly authenticationService: AuthenticationService,
   ) {}
 
-  async execute(account: Account) {
+  async execute(account: Account): Promise<{ token: string }> {
     const isAccountExists = await this.verifiedPhone(account.phone);
     if (isAccountExists) {
       throw new HttpException('phone is already registered!', 404);
     }
 
+    // get salt
     const salt = await genSalt(10);
     // hasing password
     account.password = await hash(account.password, salt);
 
     // continuar con registro
-    this.accountRepository.createAccount(account);
+    await this.accountRepository.createAccount(account);
+
+    const token = await this.authenticationService.execute(account.email);
+
+    return { token };
   }
 
   private async verifiedPhone(phone: string): Promise<Boolean> {

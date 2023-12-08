@@ -17,7 +17,9 @@ export class RegisterAccountHttpController {
   @UsePipes(ValidationPipe)
   @UseFilters(HttpExceptionFilter)
   @Post('register')
-  async execute(@Body() createAccountDto: CreateAccountDto): Promise<void> {
+  async execute(
+    @Body() createAccountDto: CreateAccountDto,
+  ): Promise<{ token: string }> {
     return await this.registerAccount.execute(createAccountDto);
   }
 }
